@@ -3,5 +3,295 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baby.babycareproductsshop.product.ProductMapper">
+    <select id="keyword">
+        SELECT
+        A.iproduct,
+        M.imiddle,
+        A.product_nm,
+        A.price,
+        A.rc_fl,
+        A.pop_fl,
+        A.new_fl,
+        COUNT(DISTINCT R.iorder) AS reviewCnt,
+        IF(COUNT(L.iuser) > 0, 1, 0) AS likeProduct
+        FROM t_product A
+        JOIN t_middle_category M
+        ON A.imiddle = M.imiddle
+        LEFT JOIN t_review R
+        ON A.iproduct = R.iproduct
+        LEFT JOIN t_wish_list L
+        ON A.iproduct = L.iproduct
+        <where>
+            <if test="keyword != null and keyword != ''">
+                A.product_nm LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+
+            <if test="category != null and category.size() > 0">
+                AND A.imiddle IN
+                <foreach collection="category" item="category" open="(" separator="," close=")">
+                    #{category}
+                </foreach>
+            </if>
+
+            <if test="minPrice !=0 and maxPrice !=0">
+                AND A.price BETWEEN #{minPrice} AND #{maxPrice}
+            </if>
+
+            <if test="minPrice ==0 and maxPrice ==0">
+                AND A.price >=0
+            </if>
+
+            <if test="minPrice ==0 and maxPrice !=0">
+                AND A.price &lt;= #{maxPrice}
+            </if>
+
+            <if test="minPrice !=0 and maxPrice ==0">
+                AND A.price >= #{minPrice}
+            </if>
+        </where>
+        GROUP BY A.iproduct
+        ORDER BY
+        <if test="sortBy == 0">
+            A.created_at DESC
+        </if>
+        <if test="sortBy == 1">
+            A.price desc
+        </if>
+        <if test="sortBy == 2">
+            A.price ASC
+        </if>
+        LIMIT #{startIdx},#{rowCount}
+
+
+    </select>
+
+    <select id="maimSelVo"> <!-- 메인-->
+        SELECT
+        A.iproduct,
+        A.product_nm,
+        A.price,
+        A.rc_fl,
+        A.pop_fl,
+        A.new_fl,
+        COUNT(DISTINCT R.iorder) AS reviewCnt,
+        IF(COUNT(L.iuser) > 0, 1, 0) AS likeProduct
+        FROM t_product A
+        LEFT JOIN t_review R
+        ON A.iproduct = R.iproduct
+        LEFT JOIN t_wish_list L
+        ON A.iproduct = L.iproduct
+        GROUP BY A.iproduct
+        <!--  LIMIT #{startIdx},#{rowCount} -->
+    </select>
+
+    <select id="selProductMainByAge"> <!-- 로그인시-->
+        SELECT
+        A.iproduct,
+        A.product_nm,
+        A.price,
+        A.rc_fl,
+        A.pop_fl,
+        A.new_fl,
+        COUNT(DISTINCT R.iorder) AS reviewCnt,
+        IF(COUNT(L.iuser) > 0, 1, 0) AS likeProduct
+        FROM t_product A
+        LEFT JOIN t_review R
+        ON A.iproduct = R.iproduct
+        LEFT JOIN t_wish_list L
+        ON A.iproduct = L.iproduct
+        LEFT JOIN t_user_child UC
+        ON A.recommand_age = UC.ichild_age
+        WHERE A.recommand_age = #{recommandAge}
+        GROUP BY A.iproduct
+    </select>
+
+    <select id="userChildAge"> <!--로그인시 유저자녀 나이 -->
+        SELECT ichild_age
+        FROM t_user_child
+        where iuser = #{iuser}
+
+    </select>
+
+    <select id="selProductPics"> <!-- 메인사진넣기-->
+        SELECT iproduct, product_pic as productPic
+        FROM t_product_pics
+        WHERE iproduct in (
+        <foreach collection="iproduct" item="iproduct" separator=",">
+            #{iproduct}
+        </foreach>
+        )
+    </select>
+
+
+    <select id="selReviewPicsAll"> <!-- 리뷰사진넣기-->
+        SELECT ireview,review_pic as reviewPic
+        FROM t_review_pics
+        WHERE ireview in (
+        <foreach collection="ireview" item="ireview" separator=",">
+            #{ireview}
+        </foreach>
+        )
+    </select>
+
+    <select id="getProductByAgeRange"> <!-- 상품조회페이지 -->
+        SELECT
+        A.iproduct,
+        M.imiddle,
+        A.product_nm,
+        A.price,
+        A.rc_fl,
+        A.pop_fl,
+        A.new_fl,
+        COUNT(DISTINCT R.iorder) AS reviewCnt,
+        IF(COUNT(L.iuser) > 0, 1, 0) AS likeProduct
+        FROM t_product A
+        JOIN t_middle_category M
+        ON A.imiddle = M.imiddle
+        LEFT JOIN t_review R
+        ON A.iproduct = R.iproduct
+        LEFT JOIN t_wish_list L
+        ON A.iproduct = L.iproduct
+        WHERE
+        M.imiddle = #{imiddle}
+        AND imain = #{imain}
+        GROUP BY A.iproduct
+        ORDER BY
+        <if test="sortBy == 0">
+            A.created_at DESC
+        </if>
+        <if test="sortBy == 1">
+            A.price desc
+        </if>
+        <if test="sortBy == 2">
+            A.price ASC
+        </if>
+        LIMIT #{startIdx},#{rowCount}
+
+    </select>
+
+
+    <select id="selProductBasket" > <!-- 장바구니보기 -->
+        SELECT
+        A.iproduct,
+        A.product_nm ,
+        A.price,
+        B.product_cnt,
+        A.price * B.product_cnt AS totalPrice
+        FROM t_product A
+        JOIN t_basket B
+        ON A.iproduct = B.iproduct
+        JOIN t_user C
+        ON C.iuser = B.iuser
+        <!-- WHERE B.iuser = #{iuser} -->
+    </select>
+
+
+
+    <select id="selProductCntBasket"> <!--갯수 가져옴 -->
+        SELECT product_cnt
+        FROM t_basket
+        where iuser = #{iuser}
+        and iproduct = #{iproduct}
+    </select>
+
+    <update id="uptBasketProductCnt"> <!-- 갯수 수정 -->
+        UPDATE t_basket
+        SET product_cnt = #{productCnt}
+        WHERE iuser = #{iuser} AND iproduct = #{iproduct}
+
+    </update>
+
+    <insert id="insBasket"> <!-- 장바구니 넣-->
+        INSERT INTO t_basket
+        SET iuser = #{iuser}
+        ,iproduct = #{iproduct}
+        ,product_cnt = #{productCnt}
+    </insert>
+
+
+    <delete id="delBasket">
+        DELETE FROM t_basket
+        WHERE iproduct IN
+        <foreach collection="iproducts" item="iproduct" open="(" separator="," close=")">
+            #{iproduct}
+        </foreach>
+    </delete>
+
+
+
+
+
+    <select id="selPaymentAmount"> <!-- 결제가격 -->
+        SELECT sum(B.product_cnt * A.price) AS paymentAmount
+        FROM t_product A
+        JOIN t_basket B
+        ON A.iproduct = B.iproduct
+    </select>
+
+
+    <select id="selProductInformation"> <!-- 상품상세보기-->
+        SELECT A.product_nm,
+        A.iproduct,
+        B.ireview,
+        A.price,
+        A.remained_product,
+        A.product_details,
+        C.nm,
+        B.contents,
+        B.created_at,
+        B.product_score
+        FROM t_product A
+        LEFT JOIN t_review B
+        ON B.iproduct = A.iproduct
+        LEFT JOIN t_user C
+        ON C.iuser = B.iuser
+        WHERE A.iproduct = #{iproduct}
+        ORDER BY B.created_at DESC
+
+    </select>
+
+
+    <select id="selProductAverage"> <!-- 리뷰개수와 평균 별점-->
+        SELECT COUNT(ireview) AS countIreview ,
+        AVG(product_score) AS avgProductScore
+        FROM t_review
+        WHERE iproduct = #{iproduct}
+    </select>
+
+
+    <insert id="insertLikeProduct"> <!-- 찜하기 추가하기 -->
+        INSERT INTO t_wish_list
+        SET iuser = #{iuser}
+        ,iproduct = #{iproduct}
+    </insert>
+
+    <delete id="deleteLikeProduct" > <!-- 찜하기 삭제 -->
+        DELETE
+        FROM t_wish_list
+        WHERE iuser = #{iuser} AND iproduct = #{iproduct}
+    </delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>
