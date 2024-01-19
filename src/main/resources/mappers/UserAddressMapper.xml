@@ -12,7 +12,7 @@
     </insert>
 
     <select id="selUserAddress">
-        SELECT zip_code, address, address_detail
+        SELECT iaddress, zip_code, address, address_detail
         FROM t_address
         WHERE iuser = #{iuser}
     </select>
