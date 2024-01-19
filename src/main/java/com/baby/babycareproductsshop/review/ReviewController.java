@@ -1,6 +1,9 @@
 package com.baby.babycareproductsshop.review;
 
 import com.baby.babycareproductsshop.common.ResVo;
+import com.baby.babycareproductsshop.common.Utils;
+import com.baby.babycareproductsshop.exception.AuthErrorCode;
+import com.baby.babycareproductsshop.exception.RestApiException;
 import com.baby.babycareproductsshop.review.model.ReviewDelDto;
 import com.baby.babycareproductsshop.review.model.ReviewInsDto;
 import com.baby.babycareproductsshop.review.model.ReviewSelDto;
@@ -24,28 +27,50 @@ public class ReviewController {
     private final ReviewService service;
 
     @PostMapping("/{iproduct}")
-    @Operation(summary ="리뷰 작성", description = "리뷰 작성 절차")
+    @Operation(summary = "리뷰 작성", description = "리뷰 작성 절차")
     public ResVo insReview(@PathVariable int iproduct,
                            @RequestPart(required = false) List<MultipartFile> pics,
-                           @RequestPart ReviewInsDto dto){
-        log.info("pics = {}",pics.size());
+                           @RequestPart ReviewInsDto dto) {
+        log.info("iproduct ={}", iproduct);
         log.info("dto = {}", dto);
+        //log.info("pics = {}",pics.size());
         dto.setIproduct(iproduct);
         dto.setPics(pics);
+        if(dto.getPics().size() >= 6){
+            throw new RestApiException(AuthErrorCode.UPLOAD_PIC_OVER_REVIEW);
+        }
         return service.insReview(dto);
+
     }
 
     @GetMapping
     @Operation(summary = "리뷰 목록", description = "리뷰 전체 리스트")
-    public List<ReviewSelVo> getReview(ReviewSelDto dto){
-        log.info("dto = {}",dto);
-        return service.getReview(dto);
+    public List<ReviewSelVo> getReview(ReviewSelDto dto) {
+        log.info("dto = {}", dto);
+        try {
+            if (Utils.isNotNull(dto)) {
+                List<ReviewSelVo> list = service.getReview(dto);
+                return list;
+            } else {
+                throw new RestApiException(AuthErrorCode.GLOBAL_EXCEPTION);
+            }
+        } catch (Exception e) {
+            throw new RestApiException(AuthErrorCode.GLOBAL_EXCEPTION);
+        }
     }
 
     @DeleteMapping
     @Operation(summary = "리뷰 삭제", description = "리뷰 삭제 절차")
-    public ResVo delReview(ReviewDelDto dto){
-        log.info("dto = {}",dto);
-        return service.delReview(dto);
+    public ResVo delReview(ReviewDelDto dto) {
+        log.info("dto = {}", dto);
+        try {
+            if (Utils.isNotNull(dto)) {
+                return service.delReview(dto);
+            } else {
+                throw new RestApiException(AuthErrorCode.GLOBAL_EXCEPTION);
+            }
+        } catch (Exception e) {
+            throw new RestApiException(AuthErrorCode.GLOBAL_EXCEPTION);
+        }
     }
 }
