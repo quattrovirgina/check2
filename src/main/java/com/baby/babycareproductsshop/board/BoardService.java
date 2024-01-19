@@ -29,13 +29,12 @@ public class BoardService {
             dto.setIboard(iboard);
             dto.setPics(pics);
             String path = "/board/" + dto.getIboard();
-            List<String> fileNameList = dto.getPicNames();
 
             myFileUtils.delDirTrigger(path);
 
             for (MultipartFile pic : dto.getPics()) {
                 String savedFileName = myFileUtils.transferTo(pic, path);
-                fileNameList.add(savedFileName);
+                dto.getPicNames().add(savedFileName);
             }
 
             return dto;
@@ -46,9 +45,18 @@ public class BoardService {
 
     public ResVo insBoard(BoardInsDto dto) {
         try {
+            int loginUserPk = authenticationFacade.getLoginUserPk(); // token
+            dto.setIuser(loginUserPk);
             int insBoardRows = mapper.insBoard(dto); // 게시글 사진 등록
 
-            if (Utils.isNotNull(insBoardRows)) {
+            // 게시글 작성 실패시 예외 던짐
+            if (!Utils.isNotNull(insBoardRows)) {
+                throw new RestApiException(AuthErrorCode.POST_REGISTER_FAIL);
+                // 게시글 작성 성공 / 업로드한 사진이 없을 경우
+            } else if (Utils.isNotNull(insBoardRows) && dto.getPics() == null) {
+                return new ResVo(SUCCESS);
+            } else {
+                // 게시글 작성 성공 / 업로드한 사진이 있을 경우 이미지 업로드 실행
                 BoardPicsDto picsDto = createPics(dto.getIboard(), dto.getPics());
                 int insBoardPicsRows = mapper.insBoardPics(picsDto);
 
@@ -61,21 +69,23 @@ public class BoardService {
                     myFileUtils.delDirTrigger(path);
                     throw new RestApiException(AuthErrorCode.POST_REGISTER_FAIL);
                 }
-            } else {
-                throw new RestApiException(AuthErrorCode.POST_REGISTER_FAIL);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RestApiException(AuthErrorCode.GLOBAL_EXCEPTION);
         }
     }
 
     public ResVo updBoard(BoardUpdDto dto) {
         try {
-            int updBoardRows = mapper.updBoard(dto);
             int loginUserPk = authenticationFacade.getLoginUserPk();
-            log.info("loginUserPk = {}", loginUserPk);
+            dto.setIuser(loginUserPk);
+            int updBoardRows = mapper.updBoard(dto);
 
-            if (Utils.isNotNull(updBoardRows)) {
+            // 작성자 외 다른 사용자가 접근했을 때
+            if (!Utils.isNotNull(updBoardRows)) {
+                throw new RestApiException(AuthErrorCode.USER_MODIFY_FAIL);
+            } else {
                 BoardPicsDto picsDto = createPics(dto.getIboard(), dto.getPics());
                 int insBoardPicsRows = mapper.insBoardPics(picsDto);
 
@@ -83,10 +93,8 @@ public class BoardService {
                     return new ResVo(SUCCESS);
                 } else {
                     // >>>>> (추후 수정) 테이블에 게시글 수정은 됐으나 사진 업로드(수정)가 제대로 이루어지지 않았을 때
-                    throw new RestApiException(AuthErrorCode.POST_REGISTER_FAIL);
+                    throw new RestApiException(AuthErrorCode.GLOBAL_EXCEPTION);
                 }
-            } else {
-                throw new RestApiException(AuthErrorCode.POST_REGISTER_FAIL);
             }
         } catch (Exception e) {
             throw new RestApiException(AuthErrorCode.GLOBAL_EXCEPTION);
