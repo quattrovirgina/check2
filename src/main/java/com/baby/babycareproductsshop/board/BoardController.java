@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -33,7 +35,7 @@ public class BoardController {
                 criteria.setBoardCode(boardCode);
                 criteria.setKeyword(keyword);
                 List<BoardGetVo> list = service.getBoard(criteria);
-//        PageNation pageNation = new PageNation(criteria, list.size());
+                PageNation pageNation = new PageNation(criteria, list.size());
                 return list;
             } else {
                 throw new RestApiException(AuthErrorCode.POST_NOT_FOUND);
@@ -59,15 +61,25 @@ public class BoardController {
 
     @PostMapping
     @Operation(summary = "게시글 등록 기능", description = "")
-    public ResVo insBoard(@RequestPart BoardInsDto dto, @RequestPart List<MultipartFile> pics) {
+    public ResVo insBoard(@RequestPart BoardInsDto dto, @RequestPart(required = false) List<MultipartFile> pics) {
         try {
-            if (Utils.isNotNull(dto) && Utils.isNotNull(pics)) {
-                dto.setPics(pics);
-                return service.insBoard(dto);
-            } else {
+            List<String> picsList = pics
+                    .stream()
+                    .map(p -> p.getName())
+                    .toList();
+
+            log.info("picsList = {}", picsList);
+
+            if (!Utils.isNotNull(dto)) {
                 throw new RestApiException(AuthErrorCode.POST_REGISTER_FAIL);
+            } else {
+                if (pics != null) {
+                    dto.setPics(pics);
+                }
+                return service.insBoard(dto);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RestApiException(AuthErrorCode.GLOBAL_EXCEPTION);
         }
     }

@@ -16,13 +16,15 @@ public enum AuthErrorCode implements ErrorCode { //enum : Const 대체 할 수 �
 
     // 게시판 / 댓글
     GLOBAL_EXCEPTION(HttpStatus.BAD_REQUEST, "요청 사항을 처리할 수 없습니다."),
-    PICS_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "사진을 등록할 수 없습니다."),
+    PICS_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "사진 등록에 실패했습니다."),
+    USER_MODIFY_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "작성자 외 수정 및 삭제가 불가능합니다."),
+
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다."),
-    POST_REGISTER_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "게시글을 등록(및 수정) 할 수 없습니다."),
+    POST_REGISTER_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "게시글 등록 및 수정이 불가능합니다."),
     POST_DELETE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "게시글을 삭제할 수 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다."),
-    COMMENT_REGISTER_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "댓글을 등록(및 수정) 할 수 없습니다."),
-    COMMENT_DELETE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "댓글을 삭제할 수 없습니다."),
+    COMMENT_REGISTER_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 등록 및 수정이 불가능합니다."),
+    COMMENT_DELETE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 수정이 불가능합니다."),
 
     // 회원
 //    NOT_ALLOWED_ADDRESS_DETAIL(HttpStatus.BAD_REQUEST, "상세 주소를 입력해주세요."),
