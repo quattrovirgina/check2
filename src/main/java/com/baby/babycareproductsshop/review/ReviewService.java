@@ -38,8 +38,16 @@ public class ReviewService {
         log.info("insDto = {}",insDto);
         String target = "review/" + dto.getIreview();
         //
+        //
         int insReview = mapper.insReview(dto);
-        int insReviewPics = mapper.insReviewPics(insDto);
+        //
+        if(dto.getPics() != null){
+            for(MultipartFile file : dto.getPics()){
+                String savedFileNm = myFileUtils.transferTo(file, target);
+                insDto.getPics().add(savedFileNm);
+            }
+            int insReviewPics = mapper.insReviewPics(insDto);
+        }
         return new ResVo(Const.SUCCESS);
     }
 
