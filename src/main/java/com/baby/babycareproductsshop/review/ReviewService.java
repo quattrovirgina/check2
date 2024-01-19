@@ -3,6 +3,7 @@ package com.baby.babycareproductsshop.review;
 import com.baby.babycareproductsshop.common.Const;
 import com.baby.babycareproductsshop.common.MyFileUtils;
 import com.baby.babycareproductsshop.common.ResVo;
+import com.baby.babycareproductsshop.common.Utils;
 import com.baby.babycareproductsshop.exception.AuthErrorCode;
 import com.baby.babycareproductsshop.exception.CommonErrorCode;
 import com.baby.babycareproductsshop.exception.RestApiException;
@@ -11,6 +12,7 @@ import com.baby.babycareproductsshop.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -35,17 +37,9 @@ public class ReviewService {
         insDto.setIreview(dto.getIreview());
         log.info("insDto = {}",insDto);
         String target = "review/" + dto.getIreview();
-        if (dto.getPics().size() >= 6 || dto.getProductScore() < 1 || dto.getContents() == null || dto.getContents().equals("")) {
-            throw new RestApiException(AuthErrorCode.REVIEW_NOT_PRODUCT_SCORE_OR_CONTENTS_PIC_OVER_REVIEW);
-        }
-        if (dto.getPics().size() <= 5 || dto.getProductScore() > 1 || dto.getContents() != null || dto.getContents().equals(" ")) {
-            for (MultipartFile file : dto.getPics()) {
-               String saveFileNm = myFileUtils.transferTo(file, target);
-               insDto.getPics().add(saveFileNm);
-            }
-        }
+        //
         int insReview = mapper.insReview(dto);
-        int insPics = mapper.insReviewPics(insDto);
+        int insReviewPics = mapper.insReviewPics(insDto);
         return new ResVo(Const.SUCCESS);
     }
 
@@ -80,11 +74,9 @@ public class ReviewService {
         log.info("dto = {}",dto);
         int selReview = mapper.selReviewByReview(dto);
         if( selReview == 0){
-            // 익셉션 핸들러 추후 작업 진행 예정
             throw new RestApiException(AuthErrorCode.DEL_REVIEW_NOT_FAIL);
         }
         if (selReview == 1){
-            // 익셉션 핸들러 추후 작업 진행 예정
             mapper.delReviewByReview(dto);
             mapper.delReview(dto);
         }
