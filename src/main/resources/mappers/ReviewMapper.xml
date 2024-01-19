@@ -16,12 +16,9 @@
         INSERT INTO t_review_pics
         ( ireview, review_pic )
         VALUES
-
-        <if test=" review_pic == null or review_pic != null ">
-            <foreach collection="pics" item="review_pic" separator=",">
-                ( #{ireview}, #{review_pic } )
-            </foreach>
-        </if>
+        <foreach collection="pics" item="review_pic" separator=",">
+               ( #{ireview}, #{review_pic} )
+        </foreach>
     </insert>
     <!-- 리뷰 목록 -->
     <select id="getReview">
