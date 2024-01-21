@@ -1,9 +1,7 @@
 package com.baby.babycareproductsshop.order.ordermain;
 
-import com.baby.babycareproductsshop.order.ordermain.model.AfterOrderDto;
-import com.baby.babycareproductsshop.order.ordermain.model.AfterOrderVo;
-import com.baby.babycareproductsshop.order.ordermain.model.InsorderDto;
-import com.baby.babycareproductsshop.order.ordermain.model.UpdateOrderDto;
+import com.baby.babycareproductsshop.order.ordermain.model.*;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 // ordermapper
@@ -19,5 +17,12 @@ public interface OrderMapper {
     // 이름, 이메일, 결제수단을 입력
 
     AfterOrderVo getAfterOrder(AfterOrderDto dto);
+    // 주문완료
+
+    int cancelOrder(CancelOrderDto dto);
+    // 주문취소
+
+    int RefundOrder(DeleteOrderDto dto);
+    // 환불
 
 }

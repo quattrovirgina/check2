@@ -3,10 +3,7 @@ package com.baby.babycareproductsshop.order.ordermain;
 import com.baby.babycareproductsshop.common.ResVo;
 import com.baby.babycareproductsshop.order.orderdetail.DetailMapper;
 import com.baby.babycareproductsshop.order.orderdetail.model.InsDetailDTo;
-import com.baby.babycareproductsshop.order.ordermain.model.AfterOrderDto;
-import com.baby.babycareproductsshop.order.ordermain.model.AfterOrderVo;
-import com.baby.babycareproductsshop.order.ordermain.model.InsorderDto;
-import com.baby.babycareproductsshop.order.ordermain.model.UpdateOrderDto;
+import com.baby.babycareproductsshop.order.ordermain.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +39,18 @@ public class OrderController {
         return service.ordercomplete(dto);
     }
 
+    // 주문내역 페이지
+    // 취소내역 페이지
+    // 주문취소 및 주문환불 페이지
+    @PatchMapping("/cancelorder")
+    public ResVo cancelordered(@RequestBody CancelOrderDto dto) {
+        return null;
+    }
+    // 주문환불 혹은 주문취소한거 삭제하는 페이지
+    @DeleteMapping("/delorder")
+    public ResVo deleteordered(@RequestBody DeleteOrderDto dto) {
+        return null;
+    }
 
 
 }

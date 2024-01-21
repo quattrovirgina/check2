@@ -40,4 +40,19 @@
 
         WHERE A.iorder = #{iorder}
     </select>
+
+    <update id="cancelOrder">
+        UPDATE t_order_details
+        <if test="deletefl == 1">
+            SET process_state = 4
+        </if>
+        <if test="refundfl == 1">
+            SET process_state = 5
+        </if>
+    </update>
+
+    <delete id="RefundOrder">
+        DELETE FROM t_order
+        WHERE iorder = #{iorder}
+    </delete>
 </mapper>

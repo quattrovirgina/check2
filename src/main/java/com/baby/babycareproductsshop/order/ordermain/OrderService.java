@@ -7,10 +7,7 @@ import com.baby.babycareproductsshop.exception.AuthErrorCode;
 import com.baby.babycareproductsshop.exception.RestApiException;
 import com.baby.babycareproductsshop.order.orderdetail.DetailMapper;
 import com.baby.babycareproductsshop.order.orderdetail.model.InsDetailDTo;
-import com.baby.babycareproductsshop.order.ordermain.model.AfterOrderDto;
-import com.baby.babycareproductsshop.order.ordermain.model.AfterOrderVo;
-import com.baby.babycareproductsshop.order.ordermain.model.InsorderDto;
-import com.baby.babycareproductsshop.order.ordermain.model.UpdateOrderDto;
+import com.baby.babycareproductsshop.order.ordermain.model.*;
 import com.baby.babycareproductsshop.product.model.ProductMainSelDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +30,7 @@ public class OrderService {
         // for(ProductMainSelDto ex : dto.getIproduct()) {
            // ex.setIproduct(dto.getIproduct());
         // }
+
         if(insorderresult == 0) {
             return new ResVo(Const.FAIL);
         }
@@ -75,5 +73,10 @@ public class OrderService {
     }
 
     // 주문내역 조회 페이지
+
+    // 주문취소 페이지(4 = 취소, 5 = 환불)
+    public ResVo ordercancel(CancelOrderDto dto) {
+        return null;
+    }
 
 }
