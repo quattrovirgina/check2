@@ -7,8 +7,8 @@ import com.baby.babycareproductsshop.common.ResVo;
 import com.baby.babycareproductsshop.exception.AuthErrorCode;
 import com.baby.babycareproductsshop.exception.CommonErrorCode;
 import com.baby.babycareproductsshop.exception.RestApiException;
-import com.baby.babycareproductsshop.product.ProductWishListMapper;
-import com.baby.babycareproductsshop.product.model.ProductSelWishListVo;
+//import com.baby.babycareproductsshop.product.ProductWishListMapper;
+//import com.baby.babycareproductsshop.product.model.ProductSelWishListVo;
 import com.baby.babycareproductsshop.security.AuthenticationFacade;
 import com.baby.babycareproductsshop.security.JwtTokenProvider;
 import com.baby.babycareproductsshop.security.MyPrincipal;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserMapper userMapper;
-    private final ProductWishListMapper wishListMapper;
+    // private final ProductWishListMapper wishListMapper;
     private final UserAddressMapper addressMapper;
     private final UserChildMapper childMapper;
     private final PasswordEncoder passwordEncoder;
@@ -98,8 +98,8 @@ public class UserService {
     public UserSelMyInfoVo getMyInfo() {
         int iuser = authenticationFacade.getLoginUserPk();
         UserSelMyInfoVo myInfoVo = userMapper.selMyInfo(iuser);
-        List<ProductSelWishListVo> wishList = wishListMapper.selWishList(iuser);
-        myInfoVo.setMyWishList(wishList);
+        // List<ProductSelWishListVo> wishList = wishListMapper.selWishList(iuser);
+        // myInfoVo.setMyWishList(wishList);
         return myInfoVo;
     }
 

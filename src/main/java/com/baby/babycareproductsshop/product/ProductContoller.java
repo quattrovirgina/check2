@@ -34,7 +34,7 @@ public class ProductContoller {
     }
 
     //--------------------------------------메인 페이지---------------------------------------------
-    @GetMapping()
+    @GetMapping("/mainScreen")
     @Operation(summary = "메인화면")
 
     public List<ProductMainSelVo> getProduct (ProductMainSelDto dto) {

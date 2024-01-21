@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baby.babycareproductsshop.order.ordermain.OrderMapper">
+    <insert id="insOrder" useGeneratedKeys="true" keyProperty="iorder">
+        INSERT INTO t_order
+        SET iuser = #{iuser},
+        iaddress = #{iaddress},
+        iproduct = #{iproduct},
+        created_at = NOW()
+    </insert>
+
+    <update id="updateOrder">
+        UPDATE t_order
+        SET addressnm = #{addressnm},
+        phonenumber = #{phonenumber},
+        email = #{email},
+        ipayment_option = #{ipayment_option}
+
+        WHERE iorder = #{iorder}
+    </update>
+
+    <select id="getAfterOrder">
+        SELECT A.idetails AS idetails,
+        A.created_at AS createdAt,
+        A.iproduct AS iproduct,
+        C.product_nm AS productNm,
+        C.price AS price,
+        B.totalprice = SUM(C.price) AS totalprice,
+        D.address AS address,
+        D.address_detail AS addressdetail,
+        B.email AS email,
+        B.ipayment_option AS ipaymentoption
+
+        FROM t_order_details A
+        JOIN t_order B ON A.iorder = B.iorder
+        JOIN t_product C ON B.iproduct = C.iproduct
+        JOIN t_address D ON B.iaddress = D.iaddress
+
+        WHERE A.iorder = #{iorder}
+    </select>
+</mapper>

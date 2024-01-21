@@ -1,6 +1,6 @@
 package com.baby.babycareproductsshop.user.model;
 
-import com.baby.babycareproductsshop.product.model.ProductSelWishListVo;
+// import com.baby.babycareproductsshop.product.model.ProductSelWishListVo;
 import lombok.Data;
 
 import java.util.List;
@@ -12,5 +12,5 @@ public class UserSelMyInfoVo {
     private int preparation;
     private int shipping;
     private int completed;
-    private List<ProductSelWishListVo> myWishList;
+    // private List<ProductSelWishListVo> myWishList;
 }

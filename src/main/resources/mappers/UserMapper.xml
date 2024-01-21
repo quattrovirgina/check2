@@ -6,10 +6,10 @@
     <insert id="insUser" useGeneratedKeys="true" keyProperty="iuser">
         INSERT INTO t_user
         SET uid = #{uid},
-            upw = #{upw},
-            nm = #{nm},
-            phone_number = #{phoneNumber},
-            email = #{email}
+        upw = #{upw},
+        nm = #{nm},
+        phone_number = #{phoneNumber},
+        email = #{email}
     </insert>
 
     <select id="selMyInfo">
