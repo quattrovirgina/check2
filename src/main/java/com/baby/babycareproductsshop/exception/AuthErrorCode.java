@@ -32,7 +32,12 @@ public enum AuthErrorCode implements ErrorCode { //enum : Const 대체 할 수 �
     PASSWORD_NOT_MATCHED(HttpStatus.NOT_FOUND, "비밀번호를 확인해주세요."),
     LOGIN_FAIL(HttpStatus.NOT_FOUND, "아이디와 비밀번호를 확인해주세요."),
     NEED_SIGNIN(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
-    NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "refresh-token 이 없습니다.");
+    NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "refresh-token 이 없습니다."),
+
+    // 오더
+    INVALID_ORDER(HttpStatus.BAD_REQUEST, "해당 주문을 처리할수 없습니다. 죄송합니다"),
+    COUNT_ZERO(HttpStatus.INTERNAL_SERVER_ERROR, "재고가 다 떨어진 제품입니다"),
+    LESS_MONEY(HttpStatus.BAD_REQUEST, "금액부족으로 결제할수 없습니다");
 
     private final HttpStatus httpStatus;
     private final String message;

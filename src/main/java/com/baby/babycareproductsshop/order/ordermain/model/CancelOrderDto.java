@@ -6,5 +6,4 @@ import lombok.Data;
 public class CancelOrderDto {
     private int iorder;
     private int process_state;
-
 }

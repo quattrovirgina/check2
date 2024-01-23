@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baby.babycareproductsshop.order.ordermain.AddressProductMapper">
+    <select id="seeAddressDetails">
+        SELECT A.iaddress AS iaddress,
+        B.zip_code as zipCode,
+        B.address as address,
+        B.address_detail as addressDetail
+        FROM t_order A
+        JOIN t_address B ON A.iaddress = B.iaddress
+
+        WHERE iorder = #{iorder}
+    </select>
+
+    <select id="seeProducts">
+        SELECT A.iproduct AS iproduct,
+        B.product_pics AS repPics,
+        total_price = SUM(CASE WHEN A.iproduct = #{iproduct} THEN 1 END) AS totalPrice,
+        A.product_nm AS productNm
+
+        FROM t_product A
+        JOIN t_product_pics B ON A.iproduct = B.iproduct
+
+        WHERE iuser = #{iuser}
+    </select>
+</mapper>

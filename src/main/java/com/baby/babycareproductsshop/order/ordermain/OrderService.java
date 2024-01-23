@@ -2,16 +2,11 @@ package com.baby.babycareproductsshop.order.ordermain;
 
 import com.baby.babycareproductsshop.common.Const;
 import com.baby.babycareproductsshop.common.ResVo;
-import com.baby.babycareproductsshop.common.Utils;
-import com.baby.babycareproductsshop.exception.AuthErrorCode;
-import com.baby.babycareproductsshop.exception.RestApiException;
 import com.baby.babycareproductsshop.order.orderdetail.DetailMapper;
-import com.baby.babycareproductsshop.order.orderdetail.model.InsDetailDTo;
 import com.baby.babycareproductsshop.order.ordermain.model.*;
-import com.baby.babycareproductsshop.product.model.ProductMainSelDto;
+import com.baby.babycareproductsshop.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,17 +14,14 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-
 public class OrderService {
     private final OrderMapper orderMapper;
     private final DetailMapper Dmapper;
+    private final AuthenticationFacade authenticationFacade;
+    private final AddressProductMapper addressProductmapper;
 
-    public ResVo OrderIns(InsorderDto dto) {
+    public ResVo orderIns(InsorderDto dto) {
         int insorderresult = orderMapper.insOrder(dto);
-
-        // for(ProductMainSelDto ex : dto.getIproduct()) {
-           // ex.setIproduct(dto.getIproduct());
-        // }
 
         if(insorderresult == 0) {
             return new ResVo(Const.FAIL);
@@ -46,9 +38,24 @@ public class OrderService {
         return new ResVo(Const.SUCCESS);
 
     }
-    // 주문 결제 페이지
 
-    public ResVo insDetails(InsDetailDTo dto) {
+    public AddressProductInfoVo orderSee(SeeOrderDto dto) {
+        dto.setIuser(authenticationFacade.getLoginUserPk());
+        log.info("dto result is: {}", dto);
+
+        List<AddressVo> addresses = addressProductmapper.seeAddressDetails(dto);
+        List<PurchaseProductInfoVo> products = addressProductmapper.seeProducts(dto);
+
+        AddressProductInfoVo vo = new AddressProductInfoVo();
+
+        vo.setAddressDetails(addresses);
+        vo.setProducts(products);
+
+        return vo;
+    }
+
+    // 주문 결제 페이지
+    /* public ResVo insDetails(InsDetailDTo dto) {
 
         int detailresult = Dmapper.insDetails(dto);
 
@@ -78,5 +85,6 @@ public class OrderService {
     public ResVo ordercancel(CancelOrderDto dto) {
         return null;
     }
+     */
 
 }

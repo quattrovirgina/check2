@@ -21,6 +21,47 @@
         WHERE iorder = #{iorder}
     </update>
 
+    <!-- <select id="seeOrder">
+        SELECT A.iorder AS iorder,
+        B.iaddress AS iaddress,
+        B.address_detail AS addressdetail,
+        D.iproduct_pics AS iproduct_pics,
+        C.product_nm AS productNm,
+        C.price AS price,
+        count(CASE WHEN A.iproduct = #{iproduct} then 1 END) AS product_cnt,
+        SUM(case when A.iproduct = #{iproduct} then 1 END) AS product_price,
+        COUNT(A.iproduct) AS total_cnt,
+        SUM(C.price) AS total_price
+
+        FROM t_order A
+        JOIN t_address B ON A.iaddress = B.iaddress
+        JOIN t_product C ON A.iproduct = C.iproduct
+        JOIN t_product_pics D ON C.iproduct = D.iproduct
+
+        WHERE A.iuser = #{iuser}
+    </select> -->
+
+    <select id="seeOrder">
+        SELECT A.iorder AS iorder,
+        B.iaddress AS iaddress,
+        B.address_detail AS addressdetail,
+        C.iproduct AS iproduct,
+        D.iproduct_pics AS iproduct_pics,
+
+        FROM t_order A
+        JOIN t_address B ON A.iaddress = B.iaddress
+        JOIN t_product C ON A.iproduct = C.iproduct
+        JOIN t_product_pics D ON C.iproduct = D.iproduct
+
+        WHERE A.iuser = #{iuser}
+    </select>
+
+    <select id="seeaddress">
+        SELECT A.address_detail, B.iorder FROM t_address A
+        JOIN t_order B ON A.iaddress = B.iaddress
+        WHERE A.iorder = #{iorder}
+    </select>
+
     <select id="getAfterOrder">
         SELECT A.idetails AS idetails,
         A.created_at AS createdAt,
@@ -43,12 +84,14 @@
 
     <update id="cancelOrder">
         UPDATE t_order_details
-        <if test="deletefl == 1">
-            SET process_state = 4
-        </if>
-        <if test="refundfl == 1">
-            SET process_state = 5
-        </if>
+        <choose>
+            <when test="deletefl == 1">
+                SET process_state = 4
+            </when>
+            <when test="refundfl == 1">
+                SET process_state = 5
+            </when>
+        </choose>
     </update>
 
     <delete id="RefundOrder">

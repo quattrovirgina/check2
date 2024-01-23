@@ -3,6 +3,7 @@ package com.baby.babycareproductsshop.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.baby.babycareproductsshop.common.AppProperties;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
@@ -31,6 +32,7 @@ public class JwtTokenProvider  {
                                             SignatureAlgorithm.HS256.getJcaName());
     }
     private String generateToken(MyPrincipal principal, long tokenValidMs) {
+
         return Jwts.builder()
                 .claims(createClaims(principal))
                 .issuedAt(new Date(System.currentTimeMillis()))

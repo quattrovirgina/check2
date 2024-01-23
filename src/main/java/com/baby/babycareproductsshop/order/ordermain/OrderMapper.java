@@ -1,8 +1,9 @@
 package com.baby.babycareproductsshop.order.ordermain;
 
 import com.baby.babycareproductsshop.order.ordermain.model.*;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 // ordermapper
 // 사용 쿼리: insOrder, updateOrder, getAfterOrder
@@ -16,7 +17,12 @@ public interface OrderMapper {
     int updateOrder(UpdateOrderDto dto);
     // 이름, 이메일, 결제수단을 입력
 
-    AfterOrderVo getAfterOrder(AfterOrderDto dto);
+    List<seeOrderVo> seeOrder(SeeOrderDto dto);
+    // 결제페이지 조회
+
+
+
+    /* AfterOrderVo getAfterOrder(AfterOrderDto dto);
     // 주문완료
 
     int cancelOrder(CancelOrderDto dto);
@@ -24,5 +30,7 @@ public interface OrderMapper {
 
     int RefundOrder(DeleteOrderDto dto);
     // 환불
+
+     */
 
 }

@@ -1,12 +1,12 @@
 package com.baby.babycareproductsshop.order.ordermain;
 
 import com.baby.babycareproductsshop.common.ResVo;
-import com.baby.babycareproductsshop.order.orderdetail.DetailMapper;
-import com.baby.babycareproductsshop.order.orderdetail.model.InsDetailDTo;
 import com.baby.babycareproductsshop.order.ordermain.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -19,7 +19,7 @@ public class OrderController {
     // 주문 결제페이지
     @PostMapping("/buyorder")
     public ResVo insertorder(@RequestBody InsorderDto dto) {
-        return service.OrderIns(dto);
+        return service.orderIns(dto);
     }
 
     @PutMapping("/buyorder/edit")
@@ -27,8 +27,25 @@ public class OrderController {
         return service.orderUpadte(dto);
     }
 
+//    @GetMapping("/buyorder/see")
+//    public List<seeOrderVo> seeitorder(@RequestBody seeOrderDto dto) {
+//        return service.orderSee(dto);
+//    }
+    // 리턴타입은 AddressProductInfoVo,
+
+    @GetMapping("/buyorder")
+    public AddressProductInfoVo seeitorder(SeeOrderDto dto) {
+
+        return service.orderSee(dto);
+
+    }
+
+
+
+
+
     // 주문완료페이지
-    @PostMapping("/getorder/buydetails")
+   /* @PostMapping("/getorder/buydetails")
     public ResVo insertdetails(@RequestBody InsDetailDTo dto) {
 
         return service.insDetails(dto);
@@ -50,7 +67,7 @@ public class OrderController {
     @DeleteMapping("/delorder")
     public ResVo deleteordered(@RequestBody DeleteOrderDto dto) {
         return null;
-    }
+    } */
 
 
 }

@@ -1,11 +1,12 @@
 package com.baby.babycareproductsshop.common;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Getter
-@ConfigurationProperties(prefix = "app")
+@Data
+@ConfigurationProperties(prefix = "app") //
 public class AppProperties {
 
     private final Jwt jwt = new Jwt();
