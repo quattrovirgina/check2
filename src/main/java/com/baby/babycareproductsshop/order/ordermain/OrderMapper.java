@@ -17,7 +17,7 @@ public interface OrderMapper {
     int updateOrder(UpdateOrderDto dto);
     // 이름, 이메일, 결제수단을 입력
 
-    List<seeOrderVo> seeOrder(SeeOrderDto dto);
+
     // 결제페이지 조회
 
 

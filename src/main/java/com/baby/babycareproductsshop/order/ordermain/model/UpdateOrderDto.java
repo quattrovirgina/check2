@@ -9,11 +9,13 @@ public class UpdateOrderDto {
 
     private int iorder;
 
+    private int iaddress;
+
     private String addressnm;
 
     private String phonenumber;
 
     private String email;
 
-    private int ipayment_option;
+    private int ipaymentoption;
 }

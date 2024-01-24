@@ -9,7 +9,7 @@ public class PurchaseProductInfoVo {
 
     private String repPic;
 
-    private String totalPrice;
+    private String productTotalPrice;
 
     private String productCnt;
 

@@ -20,7 +20,4 @@ public class InsorderDto {
     private int iuser;
 
     private int iaddress;
-
-    private int iproduct;
-
 }

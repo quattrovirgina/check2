@@ -13,5 +13,5 @@ public class AddressVo {
 
     private String address;
 
-    private List<String> addressDetail;
+    private String addressDetail;
 }
